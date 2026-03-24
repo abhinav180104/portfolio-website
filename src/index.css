@@ -6,6 +6,7 @@
   color-scheme: dark;
   --bg: #020617;
   --bg-alt: #0b1120;
+  --shell-gradient: radial-gradient(circle at 15% 18%, rgba(56, 189, 248, 0.35), transparent 55%), linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 40%, rgba(2, 6, 23, 0.95) 100%);
   --text-primary: #f8fafc;
   --text-muted: #cbd5f5;
   --panel-bg: rgba(15, 23, 42, 0.68);
@@ -20,6 +21,7 @@
   color-scheme: light;
   --bg: #f6faff;
   --bg-alt: #ffffff;
+  --shell-gradient: radial-gradient(circle at 12% 20%, rgba(2, 132, 199, 0.18), transparent 55%), linear-gradient(180deg, #fdfefe 0%, #eef4ff 45%, #e3edff 100%);
   --text-primary: #0f172a;
   --text-muted: #475569;
   --panel-bg: rgba(255, 255, 255, 0.92);
@@ -30,10 +32,28 @@
   --anchor-border: rgba(15, 23, 42, 0.2);
 }
 
+.sticky-nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  width: 100%;
+  background-color: transparent;
+  border-bottom: 1px solid var(--anchor-border);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 18px 45px rgba(2, 6, 23, 0.25);
+}
+
+.theme-light .sticky-nav {
+  background-color: transparent;
+  box-shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
+}
+
 body {
   margin: 0;
   min-height: 100vh;
   background-color: var(--bg);
+  background-image: var(--shell-gradient);
   overflow-x: hidden;
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--text-primary);
@@ -41,12 +61,8 @@ body {
 }
 
 .theme-shell {
-  background-image: radial-gradient(circle at 15% 18%, rgba(56, 189, 248, 0.35), transparent 55%), linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 40%, rgba(2, 6, 23, 0.95) 100%);
+  background-image: var(--shell-gradient);
   transition: background-image 0.8s ease, color 0.3s ease;
-}
-
-.theme-light .theme-shell {
-  background-image: radial-gradient(circle at 12% 20%, rgba(2, 132, 199, 0.18), transparent 55%), linear-gradient(180deg, #fdfefe 0%, #eef4ff 45%, #e3edff 100%);
 }
 
 .headline-gradient {
@@ -152,16 +168,25 @@ body {
 
 .info-line {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 1.2rem;
   font-size: 0.95rem;
   color: var(--text-muted);
+  text-align: center;
 }
 
 .info-line .bullet {
   color: var(--text-muted);
+}
+
+@media (min-width: 640px) {
+  .info-line {
+    flex-direction: row;
+    flex-wrap: wrap;
+    text-align: initial;
+  }
 }
 
 .theme-light .text-white {

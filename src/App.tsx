@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { AnimatedHeadline } from './components/AnimatedHeadline'
 import { AmbientGlow } from './components/AmbientGlow'
 import { ScrollProgressBar } from './components/ScrollProgressBar'
@@ -60,54 +60,125 @@ function StackPills({ items }: { items: string[] }) {
 
 export default function App() {
   const [showLoader, setShowLoader] = useState(true)
+  const [isNavOpen, setIsNavOpen] = useState(false)
 
   useEffect(() => {
     const timer = window.setTimeout(() => setShowLoader(false), LOADER_DURATION_MS)
     return () => window.clearTimeout(timer)
   }, [])
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 640) {
+        setIsNavOpen(false)
+      }
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const handleNavToggle = () => setIsNavOpen((prev) => !prev)
+  const closeNav = () => setIsNavOpen(false)
+
   if (showLoader) {
     return <LanguageLoader />
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden theme-shell text-white">
+    <div className="relative min-h-screen overflow-x-hidden theme-shell text-white">
       <ScrollProgressBar />
       <AmbientGlow />
 
       <div className="relative">
-        <motion.nav
-          className="section-container flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between border-b border-white/10 pb-10 mb-4"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-        >
-          <div>
-            <p className="text-sm text-slate-400 uppercase tracking-[0.5em]">Portfolio</p>
-            <p className="text-xl font-display font-semibold tracking-[0.3em] text-white">K SURYA SAI ABHINAV</p>
-          </div>
-          <div className="flex flex-wrap items-center gap-4 text-sm">
-            <div className="flex flex-wrap gap-4">
-              {navLinks.map((link) => (
-                <motion.a
-                  key={link.href}
-                  href={link.href}
-                  className="nav-link transition"
-                  whileHover={{ y: -2, color: '#ffffff' }}
-                  whileTap={{ scale: 0.96 }}
-                >
-                  {link.label}
-                </motion.a>
-              ))}
+        <div className="sticky-nav mb-6">
+          <motion.nav
+            className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-5 py-4 text-center sm:flex-row sm:items-center sm:justify-between sm:px-8 sm:py-5 sm:text-left"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+          >
+            <div>
+              <p className="text-lg sm:text-xl font-display font-semibold tracking-[0.3em] text-white">K SURYA SAI ABHINAV</p>
             </div>
-            <ThemeToggle />
-          </div>
-        </motion.nav>
+            <div className="hidden sm:flex flex-wrap items-center gap-4 text-sm">
+              <div className="flex flex-wrap gap-4">
+                {navLinks.map((link) => (
+                  <motion.a
+                    key={link.href}
+                    href={link.href}
+                    className="nav-link transition"
+                    whileHover={{ y: -2, color: '#ffffff' }}
+                    whileTap={{ scale: 0.96 }}
+                  >
+                    {link.label}
+                  </motion.a>
+                ))}
+              </div>
+              <ThemeToggle />
+            </div>
+            <div className="flex w-full items-center justify-between sm:hidden">
+              <ThemeToggle />
+              <button
+                type="button"
+                onClick={handleNavToggle}
+                className="inline-flex h-11 min-w-[3.2rem] items-center justify-center rounded-2xl"
+                style={{ backgroundColor: 'var(--chip-bg)', border: `1px solid var(--anchor-border)`, color: 'var(--text-primary)' }}
+                aria-expanded={isNavOpen}
+                aria-controls="mobile-nav"
+                aria-label={isNavOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              >
+                <span className="relative flex h-5 w-6 items-center justify-center">
+                  {isNavOpen ? (
+                    <>
+                      <span className="absolute block h-0.5 w-full rotate-45 rounded-full bg-current transition-all duration-200" />
+                      <span className="absolute block h-0.5 w-full -rotate-45 rounded-full bg-current transition-all duration-200" />
+                    </>
+                  ) : (
+                    <span className="flex w-full flex-col gap-1.5">
+                      <span className="block h-0.5 w-full rounded-full bg-current" />
+                      <span className="block h-0.5 w-full rounded-full bg-current" />
+                      <span className="block h-0.5 w-full rounded-full bg-current" />
+                    </span>
+                  )}
+                </span>
+              </button>
+            </div>
+          </motion.nav>
+
+          <AnimatePresence>
+            {isNavOpen && (
+              <motion.div
+                id="mobile-nav"
+                className="sm:hidden mx-auto max-w-6xl px-6 pb-6"
+                initial={{ opacity: 0, height: 0, y: -16 }}
+                animate={{ opacity: 1, height: 'auto', y: 0 }}
+                exit={{ opacity: 0, height: 0, y: -16 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+              >
+                <div className="surface-card flex flex-col gap-3 text-center">
+                  {navLinks.map((link) => (
+                    <motion.a
+                      key={`mobile-${link.href}`}
+                      href={link.href}
+                      onClick={closeNav}
+                      className="nav-link text-lg font-medium py-2 rounded-2xl"
+                      style={{ backgroundColor: 'var(--chip-bg)' }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.97 }}
+                    >
+                      {link.label}
+                    </motion.a>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
         <header id="about" className="section-container pt-8">
           <motion.div className="flex flex-col items-center text-center gap-8" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: 'easeOut' }}>
             <p className="text-xs tracking-[0.5em] uppercase text-slate-400 flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-emerald-400" />
+              <span className="inline-flex h-2 w-2 sm:h-2.5 sm:w-2.5 shrink-0 rounded-full bg-emerald-400" />
               Currently building resilient web platforms
             </p>
             <div className="space-y-3">
@@ -125,11 +196,11 @@ export default function App() {
             </motion.a>
             <div className="info-line">
               <span className="uppercase tracking-[0.5em] text-xs">Visakhapatnam, India</span>
-              <span className="bullet">•</span>
+              <span className="bullet hidden sm:inline">•</span>
               <motion.a className="underline-offset-4 hover:underline" href={`tel:${resumeData.phone.replace(/\s+/g, '')}`}>
                 {resumeData.phone}
               </motion.a>
-              <span className="bullet">•</span>
+              <span className="bullet hidden sm:inline">•</span>
               <motion.a className="underline-offset-4 hover:underline" href={`mailto:${resumeData.email}`}>
                 {resumeData.email}
               </motion.a>
