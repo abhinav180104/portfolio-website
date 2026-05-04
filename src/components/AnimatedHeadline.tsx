@@ -8,18 +8,16 @@ type AnimatedHeadlineProps = {
 const container = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: 0.08 },
+    transition: { staggerChildren: 0.04 },
   },
 }
 
 const wordVariant = {
-  hidden: { opacity: 0, y: 26, rotateX: 60, filter: 'blur(6px)' },
+  hidden: { opacity: 0, y: 18 },
   visible: {
     opacity: 1,
     y: 0,
-    rotateX: 0,
-    filter: 'blur(0px)',
-    transition: { type: 'spring', stiffness: 200, damping: 24 },
+    transition: { duration: 0.35, ease: 'easeOut' },
   },
 }
 
@@ -34,7 +32,7 @@ export function AnimatedHeadline({ text, className }: AnimatedHeadlineProps) {
   return (
     <motion.h1 className={className} variants={container} initial="hidden" animate="visible">
       {words.map((word, idx) => (
-        <motion.span key={`${word}-${idx}`} variants={wordVariant} className="inline-block mr-2 headline-gradient bg-clip-text text-transparent" whileHover={{ y: -4 }}>
+        <motion.span key={`${word}-${idx}`} variants={wordVariant} className="mr-2 inline-block headline-gradient bg-clip-text text-transparent">
           {word}
         </motion.span>
       ))}

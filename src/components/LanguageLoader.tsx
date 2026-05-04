@@ -13,8 +13,8 @@ const greetings = [
   { text: 'నా వెబ్‌సైట్‌కు స్వాగతం', locale: 'తెలుగు' }
 ];
 
-export const LOADER_DURATION_MS = 5600
-const MESSAGE_INTERVAL = 600
+export const LOADER_DURATION_MS = 4000
+const MESSAGE_INTERVAL = 800
 
 export function LanguageLoader() {
   const [index, setIndex] = useState(0)
@@ -29,10 +29,14 @@ export function LanguageLoader() {
   }, [])
 
   return (
-    <div
+    <motion.div
       className={`fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 overflow-hidden ${
         isLight ? 'bg-gradient-to-b from-slate-50 via-white to-slate-200 text-slate-900' : 'bg-gradient-to-b from-slate-950 via-night to-slate-950 text-white'
       }`}
+      initial={{ opacity: 1 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.45, ease: 'easeInOut' }}
     >
       <motion.div
         className="absolute inset-0 opacity-40 pointer-events-none"
@@ -63,6 +67,6 @@ export function LanguageLoader() {
           transition={{ duration: LOADER_DURATION_MS / 1000, ease: 'easeInOut' }}
         />
       </motion.div>
-    </div>
+    </motion.div>
   )
 }
