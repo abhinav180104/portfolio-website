@@ -84,8 +84,26 @@ body {
   }
 }
 
+@keyframes blinkCursor {
+  0%,
+  48% {
+    opacity: 1;
+  }
+  52%,
+  100% {
+    opacity: 0;
+  }
+}
+
 .section-container {
   @apply max-w-6xl mx-auto px-6 sm:px-10 py-16;
+}
+
+.blink-cursor {
+  display: inline-block;
+  margin-left: 0.12em;
+  color: currentColor;
+  animation: blinkCursor 1.1s steps(1, end) infinite;
 }
 
 .section-title {

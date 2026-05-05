@@ -166,7 +166,12 @@ export default function App() {
             </p>
             <div className="space-y-3">
               <p className="text-[clamp(3rem,8vw,5.5rem)] font-display font-black leading-tight uppercase">Sai Abhinav</p>
-              <p className="headline-gradient text-2xl sm:text-3xl font-display">Full-stack Engineer &amp; Real-time Systems Builder</p>
+              <p className="text-2xl sm:text-3xl font-display">
+                <span className="headline-gradient">Full-stack Engineer &amp; Real-time Systems Builder</span>
+                <span className="blink-cursor text-azure" aria-hidden="true">
+                  _
+                </span>
+              </p>
             </div>
             <p className="max-w-3xl text-lg text-slate-300">{resumeData.summary}</p>
             <a className="anchor-button get-in-touch-btn font-semibold" href={`mailto:${resumeData.email}`}>
@@ -257,7 +262,7 @@ export default function App() {
             </div>
           </Section>
 
-          <Section id="skills" title="Skills" lead="I enjoy picking the right abstraction for the job—here are the tools I reach for most often.">
+          <Section id="skills" title="Skills" lead="I enjoy picking the right abstraction for the job, here are the tools I reach for most often.">
             <div className="grid gap-5 md:grid-cols-3">
               {resumeData.skills.map((skill, index) => (
                 <CodeWindow key={skill.label} label={`skills-${index + 1}.md`}>
@@ -318,13 +323,13 @@ export default function App() {
                 <p className="fancy-lead">
                   Whether it&apos;s backend heavy lifting, front-end craft, or full ownership of new features, I love shipping end-to-end.
                 </p>
-                <p>
+                <p className="fancy-lead">
                   <span className="text-white font-medium">Email:</span> {resumeData.email}
                 </p>
-                <p>
+                <p className="fancy-lead">
                   <span className="text-white font-medium">Phone:</span> {resumeData.phone}
                 </p>
-                <p>
+                <p className="fancy-lead">
                   <span className="text-white font-medium">Current city:</span> {resumeData.location}
                 </p>
               </div>
